@@ -1,13 +1,13 @@
 # A New Way to Study Animals in Remote Environments Enabled by Satellites and Machine Learning.  
 <center>
 <img src="./images/cover1.3.png" alt="cover" width="800"/>  
-</center>
+</center>  
+  
 <center>  
   
 This camera enables flexible study of animals in areas with poor cellular reception, such as the mountain ranges of Colorado, or rural farmland.  
   
 </center>  
-
   
 ## Intro  
   
@@ -512,7 +512,7 @@ Within the web service you created within digital ocean, you'll want to use thes
 <img src="./images/env_vars.png" alt="cover" width="800"/>  
 </center>  
   
-```json  
+```  
 Notehub Variables  
 CLIENT_ID=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx  
 CLIENT_SECRET=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx  
