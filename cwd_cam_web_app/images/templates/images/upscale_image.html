@@ -1,0 +1,343 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    .scaled-image {
+      transform: scale(4);
+      transform-origin: top center;
+    }
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+    }
+  
+    .modal {
+      display: none; /* Hidden by default */
+      position: fixed; /* Stay in place */
+      z-index: 10; /* Sit on top */
+      padding-top: 100px; /* Location of the box */
+      left: 0;
+      top: 0;
+      width: 100%; /* Full width */
+      height: 100%; /* Full height */
+      overflow: auto; /* Enable scroll if needed */
+      background-color: rgb(0,0,0); /* Fallback color */
+      background-color: rgba(0,0,0,0.9); /* Black w/ opacity */
+    }
+  
+    .modal-content {
+      margin: auto;
+      display: block;
+      width: 80%;
+      max-width: 700px;
+    }
+  
+    #caption {
+      margin: auto;
+      display: block;
+      width: 80%;
+      max-width: 700px;
+      text-align: center;
+      color: #ccc;
+      padding: 10px 0;
+      height: 150px;
+      cursor: pointer;
+    }
+  
+    .modal-content, #caption {  
+      -webkit-animation-name: zoom;
+      -webkit-animation-duration: 0.6s;
+      animation-name: zoom;
+      animation-duration: 0.6s;
+    }
+  
+    @-webkit-keyframes zoom {
+      from {-webkit-transform:scale(0)} 
+      to {-webkit-transform:scale(1)}
+    }
+  
+    @keyframes zoom {
+      from {transform:scale(0)} 
+      to {transform:scale(1)}
+    }
+  
+    .close {
+      position: absolute;
+      top: 15px;
+      right: 35px;
+      color: #f1f1f1;
+      font-size: 40px;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+  
+    .close:hover,
+    .close:focus {
+      color: #bbb;
+      text-decoration: none;
+      cursor: pointer;
+    }
+  
+    @media only screen and (max-width: 700px){
+      .modal-content {
+        width: 100%;
+      }
+    }
+  
+    .spinner {
+      border: 4px solid rgba(0, 0, 0, 0.1);
+      border-left-color: #000;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      -webkit-animation-name: spin;
+      -webkit-animation-duration: 0.6s;
+      animation-name: spin;
+      animation-duration: 0.6s;
+      animation-iteration-count: infinite;
+      margin: auto;
+    }
+    
+    @-webkit-keyframes spin {
+      from {-webkit-transform: rotate(0deg)} 
+      to {-webkit-transform: rotate(360deg)}
+    }
+  
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+  
+    .loading-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(255, 255, 255, 0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 5;
+    }
+  
+    .hidden {
+      display: none;
+    }
+
+    .hyperlink {
+      color: blue;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+  </style>
+  
+  <title>Images</title>
+  <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline' https://code.jquery.com; worker-src 'self'">
+  <link href="{% static 'images/css/output.css' %}" rel="stylesheet">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script type="module">
+    async function upscaleImage(imageUrl, modelQuality) {
+      return new Promise((resolve, reject) => {
+        const worker = new Worker("{% static 'images/js/worker.bundle.js' %}", { type: 'module' });
+
+        worker.postMessage({ payload: { imageUrl, modelQuality } });
+
+        worker.onmessage = (event) => {
+          const { status, result, message } = event.data;
+          if (status === 'complete') {
+            console.log(result);
+            resolve(result);
+          } else if (status === 'error') {
+            console.error('Error message from worker:', message);
+            reject(new Error(message));
+          }
+        };
+
+        worker.onerror = (error) => {
+          console.error('Error in worker:', error);
+          reject(error);
+        };
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      let currentImage = 'original';
+
+      document.querySelectorAll('button.upscale').forEach((button) => {
+        button.addEventListener('click', async (event) => {
+          const modelQuality = event.target.dataset.quality;
+          const imageUrl = event.target.dataset.url;
+          const imageUid = event.target.dataset.uid;
+
+          const loadingOverlay = document.getElementById(`loading-${imageUid}`);
+          loadingOverlay.classList.remove('hidden'); // Show spinner
+
+          try {
+            const result = await upscaleImage(imageUrl, modelQuality);
+            console.log('Upscaling result:', result);
+            const upscaledImageElement = document.getElementById(`upscaled-image-${imageUid}`);
+            upscaledImageElement.src = result;
+            upscaledImageElement.dataset.upscaled = result; // Store upscaled URL in data attribute
+            upscaledImageElement.dataset.enhanced = true; // Flag to indicate image has been enhanced
+
+            // Open the modal with the upscaled image
+            const modal = document.getElementById('myModal');
+            const modalImage = document.getElementById('img01');
+            modalImage.src = result;
+            modalImage.dataset.original = imageUrl;
+            modalImage.dataset.upscaled = result;
+
+            const captionText = document.getElementById('caption');
+            captionText.innerHTML = "Click here to see original!";
+
+            currentImage = 'enhanced';
+            modal.style.display = "block";
+          } catch (error) {
+            console.error('Upscaling failed:', error);
+          } finally {
+            loadingOverlay.classList.add('hidden'); // Hide spinner
+          }
+        });
+      });
+
+      // Click event for upscaled images
+      document.querySelectorAll('img[id^="upscaled-image-"]').forEach((image) => {
+        image.addEventListener('click', (event) => {
+          const modal = document.getElementById('myModal');
+          const modalImage = document.getElementById('img01');
+          const captionText = document.getElementById('caption');
+          const imageUrl = event.target.dataset.url;
+          const upscaledUrl = event.target.dataset.upscaled;
+
+          modal.style.display = "block";
+          modalImage.src = imageUrl;
+          modalImage.dataset.original = imageUrl;
+          modalImage.dataset.upscaled = upscaledUrl;
+
+          if (!event.target.dataset.enhanced) {
+            captionText.innerHTML = "";
+            currentImage = 'original';
+          } else {
+            currentImage = 'original';
+            captionText.innerHTML = "Click here to see AI enhanced image!";
+          }
+        });
+      });
+
+      // Toggle image on caption click
+      document.getElementById('caption').addEventListener('click', () => {
+        const modalImage = document.getElementById('img01');
+        const captionText = document.getElementById('caption');
+        if (modalImage.dataset.upscaled) {
+          if (currentImage === 'original') {
+            modalImage.src = modalImage.dataset.upscaled;
+            currentImage = 'enhanced';
+            captionText.innerHTML = "Click here to see original!";
+          } else {
+            modalImage.src = modalImage.dataset.original;
+            currentImage = 'original';
+            captionText.innerHTML = "Click here to see AI enhanced image!";
+          }
+        }
+      });
+
+      // Close the modal
+      const span = document.getElementsByClassName("close")[0];
+      span.onclick = function() { 
+        document.getElementById('myModal').style.display = "none";
+      }
+
+      // Close the modal when clicking outside the image
+      window.addEventListener('click', (event) => {
+        const modal = document.getElementById('myModal');
+        if (event.target === modal) {
+          modal.style.display = "none";
+        }
+      });
+    });
+  </script>
+</head>
+
+<body class="flex items-center justify-center min-h-screen bg-gray-100">
+  <ul role="list" class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 max-w-7xl mx-auto p-4">
+    {% for image in images %}
+      <li class="col-span-1 flex flex-col divide-y divide-gray-200 rounded-lg bg-white text-center shadow relative">
+        <div class="loading-overlay hidden" id="loading-{{ image.id }}">
+          <div class="spinner"></div>
+        </div>
+        <div class="flex flex-1 flex-col p-8">
+          {% if image.b64_img %}
+          <img id="upscaled-image-{{ image.id }}" class="mx-auto h-32 w-32 flex-shrink-0 rounded-lg" src="data:image/jpeg;base64,{{ image.b64_img }}" data-url="data:image/jpeg;base64,{{ image.b64_img }}">
+          {% endif %}
+          <h3 class="mt-6 text-sm font-medium text-gray-900">Image dHash: {{ image.img_dhash }}</h3>
+          <dl class="mt-1 flex flex-grow flex-col">
+            <dd class="text-sm text-gray-500">Hamming Distance: {{ image.h_dist }}</dd>
+            <dd class="text-sm text-gray-500">Location: <a href="https://www.google.com/maps/search/{{ image.loc | urlencode}}?sa=X&ved=1t:242&ictx=111" class="hyperlink">{{ image.loc }}</a></dd>
+          </dl>
+        </div>
+        <div>
+          <div class="-mt-px flex divide-x divide-gray-200">
+            <div class="flex w-0 flex-1">
+              {% if image.b64_img %}
+              <button data-uid="{{ image.id }}" data-quality="high" data-url="data:image/jpeg;base64,{{ image.b64_img }}" download class="relative -mr-px inline-flex w-0 flex-1 items-center justify-center gap-x-3 rounded-bl-lg border border-transparent py-4 text-sm font-semibold text-gray-900 upscale">
+                <svg class="h-5 w-5 text-gray-400" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke-width="1.5" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15" />
+                </svg>
+                Enhance
+              </button>
+              {% elif not image.b64_img %}
+              <button onclick="downloadImage('{{ image.id }}', 'cellular')" class="relative -mr-px inline-flex w-0 flex-1 items-center justify-center gap-x-3 rounded-bl-lg border border-transparent py-4 text-sm font-semibold text-gray-900">
+                <svg class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                  <path d="M7 10V3h6v7h5l-8 8-8-8h5z" />
+                  <path d="M3 19a1 1 0 001 1h12a1 1 0 001-1v-2H3v2z" />
+                </svg>
+                Request
+              </button>
+              {% endif %}
+            </div>
+            <div class="flex w-0 flex-1">
+              <button onclick="deleteImage('{{ image.id }}')" class="relative inline-flex w-0 flex-1 items-center justify-center gap-x-3 rounded-br-lg border border-transparent py-4 text-sm font-semibold text-gray-900">
+                <svg class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                  <path fill-rule="evenodd" d="M5 4a2 2 0 012-2h6a2 2 0 012 2h4a1 1 0 110 2h-1v11a2 2 0 01-2 2H6a2 2 0 01-2-2V6H3a1 1 0 110-2h4zm2-1h6v1H7V3zm7 4a1 1 0 10-2 0v8a1 1 0 002 0V7zm-4 0a1 1 0 10-2 0v8a1 1 0 002 0V7z" clip-rule="evenodd" />
+                </svg>
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      </li>
+    {% endfor %}
+  </ul>
+
+  <!-- The Modal -->
+  <div id="myModal" class="modal">
+    <span class="close">&times;</span>
+    <img class="modal-content" id="img01">
+    <div id="caption"></div>
+    <img id="origImage" src="" alt="Original Image" class="max-w-full h-auto mt-4 mx-auto">
+  </div>
+  
+  <script>
+    function downloadImage(imageId, method) {
+        window.location.href = `/api/images/${imageId}/download/${method}/`;
+    }
+
+    function deleteImage(imageId) {
+        $.ajax({
+            url: `/api/images/${imageId}/delete/`,
+            type: 'DELETE',
+            success: function(result) {
+                alert('Image deleted successfully');
+                location.reload();
+            },
+            error: function(xhr, status, error) {
+                alert('Error deleting image');
+            }
+        });
+    }
+  </script>
+
+</body>
+</html>
