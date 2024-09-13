@@ -421,55 +421,85 @@ Insert the SD card into the Orange Pi and boot it up. Copy and paste the files f
   
 Connect the Orange Pi to wifi and proceed to do the following commands within a terminal:  
   
-`sudo apt-get update`  
+```  
+sudo apt-get update  
+```  
   
-`sudo apt update`  
+```  
+sudo apt update  
+```  
   
-`sudo apt install python3-pip`  
+```  
+sudo apt install python3-pip  
+```  
   
-`sudo apt install python3-venv`  
+```  
+sudo apt install python3-venv  
+```  
   
 ## Install dependencies  
   
-`python -m venv venv`
+```  
+python -m venv venv  
+```  
   
-`source ./venv/bin/activate`  
+```  
+source ./venv/bin/activate  
+```  
   
 Navigate the terminal to the Desktop by doing `cd Desktop`.
   
-`pip install -r requirements`  
+```  
+pip install -r requirements  
+```  
   
 ## Setup init.d script to run at boot  
   
 Edit the `cwd_cam` file with:  
   
-`sudo nano cwd_cam`  
+```  
+sudo nano cwd_cam  
+```  
   
 Change the script within `cwd_cam` from `cell_cam.py` to `sat_cam.py`. `cell_cam.py` is good for troubleshooting and is there for development purposes because satellite data can be costly.  
   
 copy `cwd_cam` into the correct directory:  
   
-`sudo cp cwd_cam /etc/init.d/`  
+```  
+sudo cp cwd_cam /etc/init.d/  
+```  
   
 Update the permissions of the file:  
   
-`sudo chmod +x /etc/init.d/cwd_cam`  
+```  
+sudo chmod +x /etc/init.d/cwd_cam  
+```  
   
-`sudo chown root:root /etc/init.d/cwd_cam`  
+```
+sudo chown root:root /etc/init.d/cwd_cam  
+```  
   
 Set it to run:  
   
-`sudo update-rc.d cwd_cam defaults`  
+```  
+sudo update-rc.d cwd_cam defaults  
+```  
   
 You can check to see if it is running properly with the following commands after rebooting:  
   
-`ps aux | grep cwd_cam`  
+```  
+ps aux | grep cwd_cam  
+```  
   
-`ls -l /etc/rc*.d/*cwd_cam`  
+```  
+ls -l /etc/rc*.d/*cwd_cam  
+```  
   
 You can also check the log for problems by using the following command:  
   
-`cat /var/log/cwd_cam.log`  
+```  
+cat /var/log/cwd_cam.log  
+```    
   
 ## Setup Notehub Account  
   
