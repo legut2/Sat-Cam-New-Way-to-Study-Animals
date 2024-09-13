@@ -40,7 +40,7 @@ Local DNR can set up and move multiple cameras themselves or try to incentivize 
 </center>  
   
 ## How does it work? Let's Walk Through an Example!
-Let's use Pascal, our corgi friend, as an example. He's standing in for a deer, wearing antlers and lying in front of the trail camera. The camera detects movement by comparing images with [difference hashes](https://github.com/JohannesBuchner/imagehash/blob/37370215df467c3940d6d378edb44ae56114b6a7/imagehash/__init__.py#L304C1-L304C5) or using a PIR sensor. Once Pascal is in front of the camera, these methods help detect his presence and determine when to save an image.  
+Let's use Pascal, our corgi friend, as an example. He's standing in for a deer, wearing antlers and laying in front of the trail camera. The camera detects movement by comparing images with [difference hashes](https://github.com/JohannesBuchner/imagehash/blob/37370215df467c3940d6d378edb44ae56114b6a7/imagehash/__init__.py#L304C1-L304C5) or using a PIR sensor. Once Pascal is in front of the camera, these methods help detect his presence and determine when to save an image.  
 <center>  
 <img src="./images/orig.png" alt="cover" width="480"/>  
 </center>  
