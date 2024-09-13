@@ -45,7 +45,7 @@ Let's use Pascal, our corgi friend, as an example. He's standing in for a deer, 
 <img src="./images/orig.png" alt="cover" width="480"/>  
 </center>  
   
-The metadata from the original image is sent via satellite using the Starnote notecard to [Notehub](https://blues.com/notehub/) and then routed to a [Django](https://www.djangoproject.com/) web app hosted at [https://cwd.enhancetheimage.com](https://cwd.enhancetheimage.com).  
+The metadata from the original image is sent via satellite using the [Starnote](https://blues.com/starnote/) notecard to [Notehub](https://blues.com/notehub/) and then routed to a [Django](https://www.djangoproject.com/) web app hosted at [https://cwd.enhancetheimage.com](https://cwd.enhancetheimage.com).  
   
 <center>  
 <img src="./images/starnote_flow.png" alt="cover" width="1215" style="background-color: white;"/>  
@@ -73,7 +73,7 @@ On the web app, we can request to download Pascal's image if the `Hamming distan
 <img src="./images/request_download.png" alt="cover" width="400"/>  
 </center>    
   
-Once a request is sent, the web application sends a command back to the Starnote via satellite for a specific image:  
+Once a request is sent, the web application sends a command back to the [Starnote](https://blues.com/starnote/) via satellite for a specific image:  
   
 ```json  
 {
@@ -612,6 +612,21 @@ Make sure to only send the body of the data and transform it prior to sending.
 # Now We're All Set to Start Taking Images!  
   
 <center>  
-<img src="./images/blinking_lights.gif" alt="cover" width="600"/>  
+<img src="./images/tree1.png" alt="cover" width="800"/>  
 </center>  
   
+<center>  
+<img src="./images/tree2.png" alt="cover" width="800"/>  
+</center>  
+  
+<center>  
+<img src="./images/tree3.png" alt="cover" width="800"/>  
+</center>  
+  
+<center>  
+<img src="./images/tree4.png" alt="cover" width="800"/>  
+</center>  
+  
+<center>  
+<img src="./images/tree5.png" alt="cover" width="800"/>  
+</center>  
