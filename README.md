@@ -1,5 +1,5 @@
 # A New Way to Study Animals in Remote Environments Enabled by Satellites and Machine Learning.  
-<img src="./images/cover1.3.png" alt="cover" width="800"/>  
+<img src="./images/resized/cover1.3.avif" alt="cover" width="800"/>  
   
   
 This camera enables flexible study of animals in areas with poor cellular reception, such as the mountain ranges of Colorado, or rural farmland.  
@@ -9,11 +9,11 @@ This camera enables flexible study of animals in areas with poor cellular recept
   
 > “Chronic wasting disease (CWD) is a serious disease in animals such as deer, elk, moose, and reindeer. Since first reported in the United States, CWD has spread to animals in more than half of the states in the continental United States. It is always fatal in infected animals. There is no vaccine or treatment. CWD is a type of prion disease.” - [CDC](https://www.cdc.gov/chronic-wasting/animals/index.html)  
   
-<img src="./images/healthy_animal.jpg" alt="cover" width="400"/>  
+<img src="./images/resized/healthy_animal.avif" alt="cover" width="400"/>  
   
 A healthy looking Deer Mule.
   
-<img src="./images/cwd_animal.jpg" alt="cover" width="400"/>  
+<img src="./images/resized/cwd_animal.avif" alt="cover" width="400"/>  
   
 A diseased deer with CWD that can clearly be identified as potentially being infected due to its wasted away appearance.
     
@@ -27,16 +27,16 @@ A trail camera that performs extremely well under constrained cell signal condit
   
 Local DNR can set up and move multiple cameras themselves or try to incentivize local hikers to move cameras to be more efficient and save cost. Cameras could be continuously rotated between ridgelines and valleys for when data needs to be collected. Thanks to the use of satellite data transmission, it can be easily figured out when these cameras should be rotated to a different location for either uploading the data or collecting more data.  
   
-<img src="./images/trail_cam_on_tree_close_up.png" alt="cover" width="800"/>  
+<img src="./images/resized/trail_cam_on_tree_close_up.avif" alt="cover" width="800"/>  
   
 ## How does it work? Let's Walk Through an Example!
 Let's use Pascal, our corgi friend, as an example. He's standing in for a deer, wearing antlers and laying in front of the trail camera. The camera detects movement by comparing images with [difference hashes](https://github.com/JohannesBuchner/imagehash/blob/37370215df467c3940d6d378edb44ae56114b6a7/imagehash/__init__.py#L304C1-L304C5) or using a PIR sensor. Once Pascal is in front of the camera, these methods help detect his presence and determine when to save an image.  
   
 <img src="./images/orig.png" alt="cover" width="480"/>  
   
-The metadata from the original image is sent via satellite using the [Starnote](https://blues.com/starnote/) notecard to [Notehub](https://blues.com/notehub/) and then routed to a [Django](https://www.djangoproject.com/) web app hosted at [https://cwd.enhancetheimage.com](https://cwd.enhancetheimage.com).  
+The metadata from the original image is sent via satellite using the [Starnote](https://blues.com/starnote/) notecard to [Notehub](https://blues.com/notehub/) and then routed to a [Django](https://www.djangoproject.com/) web app hosted at [https://cwdcam.enhancetheimage.com](https://cwdcam.enhancetheimage.com).  
   
-<img src="./images/starnote_flow.png" alt="cover" width="1215" style="background-color: white;"/>  
+<img src="./images/resized/starnote_flow.avif" alt="cover" width="1215" style="background-color: white;"/>  
   
 The data sent includes:  
   
@@ -56,7 +56,7 @@ When enough images accumulate on the trail camera, we can either move it ourselv
 
 On the web app, we can request to download Pascal's image if the `Hamming distance` is above 3, which, in a static environment, often indicates something worth inspecting.
   
-<img src="./images/request_download.png" alt="cover" width="400"/>  
+<img src="./images/resized/request_download.avif" alt="cover" width="400"/>  
   
 Once a request is sent, the web application sends a command back to the [Starnote](https://blues.com/starnote/) via satellite for a specific image:  
   
@@ -67,7 +67,7 @@ Once a request is sent, the web application sends a command back to the [Starnot
 }
 ```    
   
-<img src="./images/receive commands.png" alt="cover" width="800"/>  
+<img src="./images/resized/receive_commands.avif" alt="cover" width="800"/>  
   
 When the hardware receives the request, the image is resized from its original `480x640` (500KB+) `.PNG` format to a `120x160` (10KB) `.JPEG`. The **resolution is reduced by a factor of four** in both width and height, and the change in file format results in a **50x** reduction in file size. This smaller `.JPEG` is then sent over cellular data.  
 
@@ -75,7 +75,7 @@ When the hardware receives the request, the image is resized from its original `
   
 You can see the `.JPEG` stretched back to its original resolution for comparison, revealing a loss of quality and visible compression artifacts.  
   
-<img src="./images/resized.jpeg" alt="cover" width="480"/>  
+<img src="./images/resized_stretched.jpeg" alt="cover" width="480"/>  
   
 The hardware converts the `.JPEG` to a `base64` encoded image and breaks it into chunks for reliable transmission. The chunks and the status of sent images are tracked in `IMAGES_SENT.json`. Once the web application receives all the chunks for an image, it reassembles and displays it. An example json message is shown below:  
   
@@ -88,11 +88,11 @@ The hardware converts the `.JPEG` to a `base64` encoded image and breaks it into
 }
 ```  
   
-<img src="./images/enhance_ui.png" alt="cover" width="480"/>  
+<img src="./images/resized/enhance_ui.avif" alt="cover" width="480"/>  
     
 Pascal is now made whole again. However, he's still fairly low resolution and hard to see. What's great is that the web application makes use of a model called `xenova/swin2SR-realworld-sr-x4-64-bsrgan-psnr` to bring the resolution up on the client side via a library called [`transformers.js`](https://huggingface.co/docs/transformers.js/en/index). You trigger this functionality through the `Enhance` button. A model to upscale images to save on data transmission costs and create a better user experience is by far the most underrated science fiction to become a possibility in recent years.  
   
-<img src="./images/enhance.gif" alt="cover" width="480"/>  
+<img src="./images/resized/enhance.mp4" alt="cover" width="480"/>  
   
 It does a sufficient job of making the small image clearer. Despite some loss of detail, it's still possible to discern whether an animal's ribs are visible or if its spine alters its silhouette, which could indicate CWD, a different disease, or malnourishment. This model increases the resolution by `4x`, allowing us to send lower-resolution images, save data, and reduce transmission costs.  
   
@@ -103,228 +103,228 @@ Pascal now has an airbrushed appearance, but it's clear he is a well-fed good bo
 ## Getting Started with Wiring and Securely Mounting Electronics  
 When working on a project like this, I prefer to start by setting up the hardware. This approach makes troubleshooting easier, as it eliminates concerns about loose wiring. Begin by removing the plastic pegboard, which will be used to mount all components. This pegboard is included with the junction box and can be securely attached to the back of the box using the provided screws.  
   
-<img src="./images/peg_board.png" alt="cover" width="400"/>  
+<img src="./images/resized/peg_board.avif" alt="cover" width="400"/>  
   
 Set that off to the side and then solder the QWIIC shim board to the Orange Pi.  
   
-<img src="./images/qwiic_shim.png" alt="cover" width="400"/>  
+<img src="./images/resized/qwiic_shim.avif" alt="cover" width="400"/>  
   
   
 This QWIIC shim board is used to communicate over I2C to the Notecard Carrier XS. Each socket in the carrier will correspond to a specific notecard that allows us to communicate over satellite or cell transmission for each respective notecard. We'll be using QWIIC cables to cut down on the required soldering for this project. There is good documentation to reference for assembling the notecarrier XS. It's mostly intuitive, but which connector goes to what antenna wire isn't always something that's easy to remember. You can check that out over [here for the satellite notecard](https://dev.blues.io/quickstart/starnote-quickstart/#connecting-a-starnote) and [here for the cell notecard](https://dev.blues.io/quickstart/notecard-quickstart/notecard-and-notecarrier-f/).  
   
-<img src="./images/notecarrier_i2c.png" alt="cover" width="400"/>  
+<img src="./images/resized/notecarrier_i2c.avif" alt="cover" width="400"/>  
   
   
 For convenience, here are the images for wiring up antennas taken from Blues's documentation.  
   
-<img src="./images/starnote_antennas.png" alt="cover" width="800"/>  
+<img src="./images/resized/starnote_antennas.avif" alt="cover" width="800"/>  
   
     
-<img src="./images/cell_wifi_notecard_antennas.png" alt="cover" width="800"/>  
+<img src="./images/resized/cell_wifi_notecard_antennas.avif" alt="cover" width="800"/>  
     
   
 Next we'll connect a ribbon cabble to a 24 pin breakout board to make it easier to solder connections. We'll be using this to solder the web camera that uses a set of 4 wires that act like a USB device.  
     
-<img src="./images/web_cam_break_out.png" alt="cover" width="800"/>  
+<img src="./images/resized/web_cam_break_out.avif" alt="cover" width="800"/>  
     
   
 This is how we wire the web camera and the relevant pin numbers to use.  
     
-<img src="./images/pin_breakout_board.png" alt="cover" width="800"/>  
+<img src="./images/resized/pin_breakout_board.avif" alt="cover" width="800"/>  
     
   
-We can start mounting some electronics on the peg board using nylon standoffs and screws that are M3. We can also use some zip ties to make sure nothing moves and hide some of the wiring on the other side. The web camera can be secured within the center of the peg board with a single zip tie as long as nothing crosses its field of view. The LM2596 DC-DC Step Down board can be mounted with the nylon M3 fasteners and 2 18650 battery holders can be held in place with zip ties to be soldered together in series. You can see the wiring drawn in below to make it more clear how to do that.  
+We can start mounting some electronics on the peg board using nylon standoffs and screws that are M3. We can also use some zip ties to make sure nothing moves and hide some of the wiring on the other side. The web camera can be secured within the center of the peg board with a single zip tie as long as nothing crosses its field of view. The LM2596 DC-DC Step Down board can be mounted with the nylon M3 fasteners and the two 18650 battery holders can be held in place with zip ties to be soldered together in series. You can see the wiring drawn in below to make it more clear how to do that.  
     
-<img src="./images/mount_battery_holders_and_voltage_converter.png" alt="cover" width="800"/>  
+<img src="./images/resized/mount_battery_holders_and_voltage_converter.avif" alt="cover" width="800"/>  
     
   
 Now mount the rest of the electronics to the peg board. For the most part, it's usually best to solder first and then affix the boards to the pegboard.  
     
-<img src="./images/mount_the_rest_of_the_electronics.png" alt="cover" width="800"/>  
+<img src="./images/resized/mount_the_rest_of_the_electronics.avif" alt="cover" width="800"/>  
     
   
 The wiring doesn't have to be beautifully managed on the back. Nobody is going to know unless you show them. What's important is to not have wires moving around too much so they don't break or come loose.  
     
-<img src="./images/back_of_board.png" alt="cover" width="800"/>  
+<img src="./images/resized/back_of_board.avif" alt="cover" width="800"/>  
     
-It's worth mentioning that you should clean the PIR sensor with some isopropyl alcohol. Apparently it's a common issue to have them be a bit smudged when you receive it. You can gently pull the plastic cap from the sensor and allow it to  
+It's worth mentioning that you should clean the PIR sensor with some isopropyl alcohol. Apparently it's a common issue to have them be a bit smudged when you receive it. You can gently pull the plastic cap from the sensor to clean it.  
     
-<img src="./images/pir_capped.png" alt="cover" width="500"/>  
+<img src="./images/resized/pir_capped.avif" alt="cover" width="500"/>  
     
   
     
-<img src="./images/pir_smudged.png" alt="cover" width="500"/>  
+<img src="./images/resized/pir_smudged.avif" alt="cover" width="500"/>  
     
     
-<img src="./images/pir_clean.png" alt="cover" width="500"/>  
+<img src="./images/resized/pir_clean.avif" alt="cover" width="500"/>  
     
   
 Refer to the wiring diagram to complete the wiring and assembly. A switch is included between the batteries and the positive terminal of the LM2596 voltage converter for easy on/off control.     
     
-<img src="./images/schematic.png" alt="cover" width="800"/>  
+<img src="./images/resized/schematic.avif" alt="cover" width="800"/>  
     
   
 The PIR sensor is mounted using some super glue ontop of a standoff.  
   
     
-<img src="./images/mounted_electronics_and_wired.png" alt="cover" width="800"/>  
+<img src="./images/resized/mounted_electronics_and_wired.avif" alt="cover" width="800"/>  
     
   
 Mount the peg board within the enclosure.  
   
     
-<img src="./images/in_the_box.png" alt="cover" width="800"/>  
+<img src="./images/resized/in_the_box.avif" alt="cover" width="800"/>  
     
 
 Put some tape on the top to protect the surface and we're going to use some of those ports that come with the box to allow for the antennas to stick out.  
   
     
-<img src="./images/taped.png" alt="cover" width="800"/>  
+<img src="./images/resized/taped.avif" alt="cover" width="800"/>  
     
   
     
-<img src="./images/taped2.png" alt="cover" width="800"/>  
+<img src="./images/resized/taped2.avif" alt="cover" width="800"/>  
     
   
 We're going to cut a couple holes for two ports. You can see the following bit I used to cut. Looks like the wholes were about 3/4 inch in diameter based on residue from tape left on bit.  
   
     
-<img src="./images/bit_size_for_port.png" alt="cover" width="800"/>  
+<img src="./images/resized/bit_size_for_port.avif" alt="cover" width="800"/>  
     
   
     
-<img src="./images/port_test_fit.png" alt="cover" width="800"/>  
+<img src="./images/resized/port_test_fit.avif" alt="cover" width="800"/>  
     
   
     
-<img src="./images/holes_for_ports.png" alt="cover" width="800"/>  
+<img src="./images/resized/holes_for_ports.avif" alt="cover" width="800"/>  
     
   
 We're going to create a way to attach the box to a typical camera tripod. This allows the camera box to be freestanding. This is incredibly useful during development because you'll need the box to be outside whenever making changes to the satellite communication. So we're going to take the camera stand and attach a cold shoe. The one pictured is not the one I recommend using because it is prone to coming apart due to its design.   
   
     
-<img src="./images/cold_shoe.png" alt="cover" width="800"/>  
+<img src="./images/resized/cold_shoe.avif" alt="cover" width="800"/>  
     
   
 This one is much better and is the one I ended up using. It's still a cold shoe but more secure for mounting the box on a freestanding camera tripod.  
   
     
-<img src="./images/cold_shoe_2.jpg" alt="cover" width="800"/>  
+<img src="./images/resized/cold_shoe_2.avif" alt="cover" width="800"/>  
     
   
 Test fit the hardware really quick on the cold shoe so you can understand how this works without the box being in the way.  
   
     
-<img src="./images/cold_shoe_test_fit_for_hardware.png" alt="cover" width="800"/>  
+<img src="./images/resized/cold_shoe_test_fit_for_hardware.avif" alt="cover" width="800"/>  
     
   
 Now we're going to make a mark on the box by figuring out where the area is that the box can be balanced on the tripod. It's important to have the electronics and pegboard back in the box at this point to make things balanced. Find the point at which the box balances on the hardware freely.  
   
     
-<img src="./images/finding_centroid1.png" alt="cover" width="800"/>  
+<img src="./images/resized/finding_centroid1.avif" alt="cover" width="800"/>  
     
   
     
-<img src="./images/finding_centroid2.png" alt="cover" width="800"/>  
+<img src="./images/resized/finding_centroid2.avif" alt="cover" width="800"/>  
     
   
     
-<img src="./images/marking_centroid.png" alt="cover" width="800"/>  
+<img src="./images/resized/marking_centroid.avif" alt="cover" width="800"/>  
     
   
     
-<img src="./images/circle_of_centroid.png" alt="cover" width="800"/>  
+<img src="./images/resized/circle_of_centroid.avif" alt="cover" width="800"/>  
     
   
 At this point, I drew a symbol resembling a centroid within the circle. Technically, the marked spot isn't a true centroid, as the center of mass doesn't perfectly align with where the centroid would be. The box has a non-uniform weight distribution, so the center of gravity and the centroid would fall in slightly different positions, though likely close to one another. While these concepts are distinct, for the purposes of this project, I will refer to the spot we marked as a centroid.  
     
-<img src="./images/centroid.png" alt="cover" width="800"/>  
+<img src="./images/resized/centroid.avif" alt="cover" width="800"/>  
     
   
 Clamp it down so it doesn't move.  
   
     
-<img src="./images/centroid_clamped.png" alt="cover" width="800"/>  
+<img src="./images/resized/centroid_clamped.avif" alt="cover" width="800"/>  
     
   
 Select a bit, which in this case is 15/64 inches. I apologize for those that use the metric system but I reside in a country where we have so much freedom that we are allowed to choose a poor unit of measure. I'm fairly sure a bald eagle loses a feather or something each time an American uses metric units. If you don't believe me, you can just finish building this project and get a picture of it happening yourself.  
     
-<img src="./images/bit_for_centroid.png" alt="cover" width="800"/>  
+<img src="./images/resized/bit_for_centroid.avif" alt="cover" width="800"/>  
     
   
     
-<img src="./images/measuring_threaded.png" alt="cover" width="800"/>  
+<img src="./images/resized/measuring_threaded.avif" alt="cover" width="800"/>  
     
   
 Drill a hole within the center of the centroid and test fit the hardware.  
   
     
-<img src="./images/hardware_for_centroid_test_fit.png" alt="cover" width="800"/>  
+<img src="./images/resized/hardware_for_centroid_test_fit.avif" alt="cover" width="800"/>  
     
   
     
-<img src="./images/hardware_for_centroid_test_fit2.png" alt="cover" width="800"/>  
+<img src="./images/resized/hardware_for_centroid_test_fit2.avif" alt="cover" width="800"/>  
     
   
 Cut a couple of squares from the end of our rubber strip to make our own gasket for this mounting hardware.  
     
-<img src="./images/cut_seal_squares.png" alt="cover" width="800"/>  
+<img src="./images/resized/cut_seal_squares.avif" alt="cover" width="800"/>  
     
   
 Punch a hole in the squares with a hole punch, or in this case a leather hole punch that is 1/4 inch in diameter. For a leather hole punch, you just smack it on the back with a hammer and it cuts out a circle in the material. As the name implies, it's normally used as a leatherworking tool.  
   
     
-<img src="./images/seal_punch_holes_bit.png" alt="cover" width="800"/>  
+<img src="./images/resized/seal_punch_holes_bit.avif" alt="cover" width="800"/>  
     
   
     
-<img src="./images/punched_seals.png" alt="cover" width="800"/>  
+<img src="./images/resized/punched_seals.avif" alt="cover" width="800"/>  
     
   
     
-<img src="./images/centroid_hardware_seal_hardware.png" alt="cover" width="800"/>  
+<img src="./images/resized/centroid_hardware_seal_hardware.avif" alt="cover" width="800"/>  
     
   
 Trim the external seal flush with the circular hardware fastener.  
   
     
-<img src="./images/trim_seal.png" alt="cover" width="800"/>  
+<img src="./images/resized/trim_seal.avif" alt="cover" width="800"/>  
     
   
     
-<img src="./images/trim_seal2.png" alt="cover" width="800"/>  
+<img src="./images/resized/trim_seal2.avif" alt="cover" width="800"/>  
     
   
 Test fit the hardware with the seals and tighten it up.  
   
     
-<img src="./images/test_fit_hardware_seal_sandwiched.png" alt="cover" width="800"/>  
+<img src="./images/resized/test_fit_hardware_seal_sandwiched.avif" alt="cover" width="800"/>  
     
   
 We can now assess how well the tripod supports the box and how easily it can be repositioned. This may be a good time to route any antennas through the ports on the top of the box. I routed the satellite notecard's antennas through the top and left the cell antennas inside, to be used on the side of the box.    
   
     
-<img src="./images/test_fit_cold_shoe_hardware_w_seals.png" alt="cover" width="800"/>  
+<img src="./images/resized/test_fit_cold_shoe_hardware_w_seals.avif" alt="cover" width="800"/>  
     
   
 Next, we need to attach the box to a tree. While the tripod is useful for debugging, a trail camera is typically mounted to a tree or post. To do this, we'll modify the brackets to accommodate tie-down straps, as the existing holes in the enclosure's brackets are too small for the tie-down hooks.  
   
     
-<img src="./images/not_fit_hook_to_bracket.png" alt="cover" width="800"/>  
+<img src="./images/resized/not_fit_hook_to_bracket.avif" alt="cover" width="800"/>  
     
   
 We're going to use a 27/64 inch drill bit in a drill press to mark how much bigger each hole needs to be.  
   
     
-<img src="./images/bit_to_mark_brackets.png" alt="cover" width="800"/>  
+<img src="./images/resized/bit_to_mark_brackets.avif" alt="cover" width="800"/>  
     
   
     
-<img src="./images/drill_press_mark.png" alt="cover" width="800"/>  
+<img src="./images/resized/drill_press_mark.avif" alt="cover" width="800"/>  
     
   
     
-<img src="./images/marked_brackets.png" alt="cover" width="800"/>  
+<img src="./images/resized/marked_brackets.avif" alt="cover" width="800"/>  
     
   
 Swap out your drill bit for one designed to widen the hole more effectively. The bit I used wasn't hard enough and struggled to penetrate the material. A carbide bit, or one with similar hardness, would likely be more suitable for this job. The bit I used was tapered, and I applied oil while drilling to make cutting through the material easier.  
@@ -334,26 +334,26 @@ Please note that the bracket will heat up during drilling, so take proper safety
 Consider whether the bracket could be recreated with a 3D printer instead of enlarging the holes through machining.  
   
     
-<img src="./images/tap_bracket_holes.png" alt="cover" width="800"/>  
+<img src="./images/resized/tap_bracket_holes.avif" alt="cover" width="800"/>  
     
   
 File down the flashing that has appeared around the hole. It doesn't have to be perfect but this is to prevent injury from handling the bracket. 
   
     
-<img src="./images/file_brackets_down.png" alt="cover" width="800"/>  
+<img src="./images/resized/file_brackets_down.avif" alt="cover" width="800"/>  
     
   
 Fasten the brackets to each of the back corners of the enclosure. There are pre-made holes for them on there.  
   
     
-<img src="./images/bracket_fastened.png" alt="cover" width="800"/>  
+<img src="./images/resized/bracket_fastened.avif" alt="cover" width="800"/>  
     
   
     
-<img src="./images/assembled_box.png" alt="cover" width="800"/>  
+<img src="./images/resized/assembled_box.avif" alt="cover" width="800"/>  
     
   
-## Flash SD Card w/ Orange Pi  
+## Flash SD Card with Orange Pi's Version of Ubuntu  
   
 Download a way to flash an image file, for example [balena etcher](https://etcher.balena.io/#download-etcher), [rufus](https://rufus.ie/en/), or [dd](./dd.md). For the sake of simplicity, we'll be using **balena etcher**.
   
@@ -362,31 +362,31 @@ Download the image file [over here](https://drive.google.com/file/d/1CXC_v6i8D2I
 Extract the folder and select the `.img` file within it from the `balena etcher` option to flash.  
   
     
-<img src="./images/balena_menu.png" alt="cover" width="800"/>  
+<img src="./images/resized/balena_menu.avif" alt="cover" width="800"/>  
     
   
     
-<img src="./images/flash_file.png" alt="cover" width="800"/>  
+<img src="./images/resized/flash_file.avif" alt="cover" width="800"/>  
     
   
 Insert your mini SD card within a card reader to your computer. Then select device and make sure it has the storage amount you would expect.  
   
     
-<img src="./images/slect_device_to_flash.png" alt="cover" width="800"/>  
+<img src="./images/resized/slect_device_to_flash.avif" alt="cover" width="800"/>  
     
   
     
-<img src="./images/flashing_in_progress.png" alt="cover" width="800"/>  
+<img src="./images/resized/flashing_in_progress.avif" alt="cover" width="800"/>  
     
   
     
-<img src="./images/done_flashing_image.png" alt="cover" width="800"/>  
+<img src="./images/resized/done_flashing_image.avif" alt="cover" width="800"/>  
     
   
 Insert the SD card into the Orange Pi and boot it up. Copy and paste the files from the firmware folder onto the Desktop of the Orange Pi.
   
     
-<img src="./images/copynpaste.png" alt="cover" width="800"/>  
+<img src="./images/resized/copynpaste.avif" alt="cover" width="800"/>  
     
   
 ## Install Pip and Virtual Environment Module
@@ -478,19 +478,19 @@ cat /var/log/cwd_cam.log
 **Create a notehub.io account and create a project:**  
   
     
-<img src="./images/new_project.png" alt="cover" width="400"/>  
+<img src="./images/resized/new_project.avif" alt="cover" width="400"/>  
      
   
  **Copy the product UID.**  
   
     
-<img src="./images/copy_product_uid.png" alt="cover" width="800"/>  
+<img src="./images/resized/copy_product_uid.avif" alt="cover" width="800"/>  
     
   
 ## Replace PRODUCT_UID value with your own in sat_cam.py  
   
     
-<img src="./images/product_uid.png" alt="cover" width="800"/>  
+<img src="./images/resized/product_uid.avif" alt="cover" width="800"/>  
     
   
 ## Web Application  
@@ -505,13 +505,13 @@ Create your own fork of the repo and use it with digital ocean.
 Use these settings for the web service:  
   
     
-<img src="./images/do_settings.png" alt="cover" width="800"/>  
+<img src="./images/resized/do_settings.avif" alt="cover" width="800"/>  
     
   
 Within the web service you created within digital ocean, you'll want to use these settings:  
   
     
-<img src="./images/env_vars.png" alt="cover" width="800"/>  
+<img src="./images/resized/env_vars.avif" alt="cover" width="800"/>  
     
   
 ```  
@@ -534,17 +534,17 @@ You can grab the first four values from notehub.io
 #### Create `CLIENT_ID` and `CLIENT_SECRET` within notehub.io
 Navigate to your dashboard and click on settings.  
     
-<img src="./images/settings1.png" alt="cover" width="300"/>  
+<img src="./images/resized/settings1.avif" alt="cover" width="300"/>  
     
   
     
-<img src="./images/settings2.png" alt="cover" width="300"/>  
+<img src="./images/resized/settings2.avif" alt="cover" width="300"/>  
     
 
 Now go ahead and scroll down through your and click on `Generate programatic access`, copy the credentials into environment variables, and click save within the settings!
 
     
-<img src="./images/generate programmatic access.png" alt="cover" width="800"/>  
+<img src="./images/resized/generate_programmatic_access.avif" alt="cover" width="800"/>  
     
 
 #### Find `PROJECT_ID` and `DEVICE_ID`
@@ -552,31 +552,31 @@ Now go ahead and scroll down through your and click on `Generate programatic acc
 Scroll all the way back up and copy over the `Project UID` without the `app:` over to your environment variable for `PROJECT_ID`. You can also see this as part of the URL within your web browser's address bar.
 
     
-<img src="./images/project id at top of settings.png" alt="cover" width="800"/>  
+<img src="./images/resized/project_id_at_top_of_settings.avif" alt="cover" width="800"/>  
     
 
-Lastly, click onto `Devices` and copy over the relevant ID under the `Best ID` column for `DEVICE_ID` within the `.env` file.
+Lastly, click onto `Devices` and copy over the relevant ID under the `Best ID` column for `DEVICE_ID` within the environment variables for Digital Ocean.
 
     
-<img src="./images/device id.png" alt="cover" width="800"/>  
+<img src="./images/resized/device_id.avif" alt="cover" width="800"/>  
     
 
 Fill out the remaining postgres related environment variables from the postgres database you setup. `POSTGRES_NAME` is the `database` value in the image below. You will also want to download and copy the certificate into `cwd_cam_web_app/certs/`. This certificate allows for the database to be connected to over SSL.  
   
     
-<img src="./images/do_pg_settings.png" alt="cover" width="800"/>  
+<img src="./images/resized/do_pg_settings.avif" alt="cover" width="800"/>  
     
   
 You'll want to make sure to route the events within Notehub to go to your web application. Make sure to route to the `/api/images/` endpoint within your hosted web application.  
   
     
-<img src="./images/route1.png" alt="cover" width="800"/>  
+<img src="./images/resized/route1.avif" alt="cover" width="800"/>  
     
   
 Select `data.qo` and `sat.qo` as the notefiles to send to that API endpoint.  
   
     
-<img src="./images/route2.png" alt="cover" width="800"/>  
+<img src="./images/resized/route2.avif" alt="cover" width="800"/>  
     
   
 Make sure to only send the body of the data and transform it prior to sending.  
@@ -584,21 +584,21 @@ Make sure to only send the body of the data and transform it prior to sending.
 # Now We're All Set to Start Taking Images!  
   
     
-<img src="./images/tree1.png" alt="cover" width="800"/>  
+<img src="./images/resized/tree1.avif" alt="cover" width="800"/>  
     
   
     
-<img src="./images/tree2.png" alt="cover" width="800"/>  
+<img src="./images/resized/tree2.avif" alt="cover" width="800"/>  
     
   
     
-<img src="./images/tree3.png" alt="cover" width="800"/>  
+<img src="./images/resized/tree3.avif" alt="cover" width="800"/>  
     
   
     
-<img src="./images/tree4.png" alt="cover" width="800"/>  
+<img src="./images/resized/tree4.avif" alt="cover" width="800"/>  
     
   
     
-<img src="./images/tree5.png" alt="cover" width="800"/>  
+<img src="./images/resized/tree5.avif" alt="cover" width="800"/>  
     
