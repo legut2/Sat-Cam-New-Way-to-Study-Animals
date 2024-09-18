@@ -92,7 +92,7 @@ The hardware converts the `.JPEG` to a `base64` encoded image and breaks it into
     
 Pascal is now made whole again. However, he's still fairly low resolution and hard to see. What's great is that the web application makes use of a model called `xenova/swin2SR-realworld-sr-x4-64-bsrgan-psnr` to bring the resolution up on the client side via a library called [`transformers.js`](https://huggingface.co/docs/transformers.js/en/index). You trigger this functionality through the `Enhance` button. A model to upscale images to save on data transmission costs and create a better user experience is by far the most underrated science fiction to become a possibility in recent years.  
   
-<img src="./images/resized/enhance.mp4" alt="cover" width="480"/>  
+<img src="./images/enhance.gif" alt="cover" width="480"/>  
   
 It does a sufficient job of making the small image clearer. Despite some loss of detail, it's still possible to discern whether an animal's ribs are visible or if its spine alters its silhouette, which could indicate CWD, a different disease, or malnourishment. This model increases the resolution by `4x`, allowing us to send lower-resolution images, save data, and reduce transmission costs.  
   
