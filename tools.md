@@ -1,0 +1,12 @@
+# Tools
+- [Helping Hands](https://www.amazon.com/gp/product/B08R5CDSX4/ref=ppx_yo_dt_b_search_asin_title?ie=UTF8&psc=1) for holding wires and parts while soldering  
+- [Wire Strippers](https://www.amazon.com/gp/product/B000JNNWQ2/ref=ppx_yo_dt_b_search_asin_title?ie=UTF8&th=1)  
+- [Wire Wrap Tool](https://www.amazon.com/gp/product/B00C9NWR1Q/ref=ppx_yo_dt_b_search_asin_title?ie=UTF8&psc=1) for a quick way to alternatively attach wires  
+- [Portable Soldering Iron](https://www.amazon.com/gp/product/B071K5FNGT/ref=ppx_yo_dt_b_search_asin_title?ie=UTF8&th=1)  
+- [Benchtop Drill Press](https://fox.build/equipment/benchtop-drillpress/)  
+- [Cordless Hand Drill](https://www.amazon.com/Milwaukee-2801-21P-Lithium-Ion-Brushless-Cordless/dp/B07KS4RCMR/ref=sr_1_2?crid=1B7HHBK5NEISE&dib=eyJ2IjoiMSJ9.I2t9JVP3Jyu7MEXqnHm7XRdUSm_zpcrghjakVKGieD06_Xt0aqg5OSH5Ynvx57Js8_f4JpBYwNVX0LePS-hTARZIV2zGgE3x5UvvCuS3luAyOhGDc32JDsW1q)  
+- [X-ACTO Knife](https://www.amazon.com/X-ACTO-Yourself-Great-Arts-Crafts/dp/B000HGMA7I/ref=sr_1_18?crid=2ZWGVE0B9VYF9&keywords=xacto+knife&qid=1704454816&s=arts-crafts&sprefix=xacto+knif%2Carts-crafts%2C81&sr=1-18)  
+- [Vice with Atleast a 7.5" Opening](https://www.amazon.com/Forward-1308-Bench-Ductile-Swivel/dp/B0BZHV51F4/ref=sr_1_7?crid=32DL27E1MND7A&dib=eyJ2IjoiMSJ9.jyw41uImc_oO_oDdigXbJBeTjMA3uopNbshNLuHaLpsLhPwavmoESIw9icHEKSOm0V3cLgtisKzvZo6Q-pLeEE2YRYu5cwPuZotH6awhRtV9w7IfxQsO5cGHRQQW9PNMbTR6v8FoY)  
+- [Screwdriver](https://www.aliexpress.us/item/3256802472712034.html?spm=a2g0o.order_list.order_list_main.5.58b218023BaU3T&gatewayAdapt=glo2usa)  
+- [Eye Glass Repair Flathead Screwdriver](https://www.amazon.com/gp/product/B07V7DH3Y6/ref=ppx_yo_dt_b_search_asin_title?ie=UTF8&psc=1)  
+- [1/4 Inch Hole Punch](https://www.amazon.com/HARFINGTON-Leather-Fabrics-Leathercraft-Working/dp/B0BGFG9VC3)  

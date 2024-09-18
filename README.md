@@ -4,6 +4,11 @@
   
 This camera enables flexible study of animals in areas with poor cellular reception, such as the mountain ranges of Colorado, or rural farmland.  
   
+## Prerequisites:  
+- [Materials and Supplies](./materials.md)  
+- [Software Tools](./software_tools.md)  
+- [Fabrication Tools](./tools.md)  
+- [Schematic](./schematic.md)  
   
 ## Intro  
   
