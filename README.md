@@ -123,7 +123,7 @@ For convenience, here are the images for wiring up antennas taken from Blues's d
 <img src="./images/resized/cell_wifi_notecard_antennas.avif" alt="cover" width="800"/>  
     
   
-Next we'll connect a ribbon cabble to a 24 pin breakout board to make it easier to solder connections. We'll be using this to solder the web camera that uses a set of 4 wires that act like a USB device.  
+Next we'll connect a ribbon cable to a 24 pin breakout board to make it easier to solder connections. We'll be using this to solder the web camera that uses a set of 4 wires that act like a USB device.  
     
 <img src="./images/resized/web_cam_break_out.avif" alt="cover" width="800"/>  
     
